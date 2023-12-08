@@ -15,7 +15,7 @@ GREEN_BG = "\033[42m"
 END = "\033[0m"
 
 GPT_MODEL = "gpt-3.5-turbo"
-openai.api_key = "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"
+openai.api_key = "your key"
 # 检验
 sys_template = '''
 假设你是电商平台的搜索助理。该平台支持对各类商品和店铺的搜索，除搜索关键词外，返回结果时还考虑地理位置，优先返回附近的店铺和商品。
