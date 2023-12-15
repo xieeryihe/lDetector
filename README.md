@@ -10,31 +10,35 @@ Here we list all artifacts of lDetector. We report both codes used and raw exper
 
 - Comparing models of **different sizes**, the test results are as follows:
 
-| Model                                                        | Model Size | Generated Test Cases                                         | Suspicious Leak-recalls                                      | Shops Involved | Confirmed Leak-recalls | Confirmed Shops Involved | False positive |
-| ------------------------------------------------------------ | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---------------------- | ------------------------ | -------------- |
-| [gpt-neo-2.7B](https://huggingface.co/EleutherAI/gpt-neo-2.7B) | 2.7B       | [2607](https://github.com/xieeryihe/lDetector/blob/main/data/cases/gpt-neo-2.7B.xlsx) | [35](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-gpt-neo-2.7B.xlsx) | 35             | 6                      | 6                        | 29             |
-| [chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b)      | 6B         | [3803](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatglm2-6b.xlsx) | [54](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatglm2-6b.xlsx) | 44             | 32                     | 26                       | 22             |
-| [Qwen-14B-Chat-Int4](https://huggingface.co/Qwen/Qwen-14B-Chat-Int4) | 14B        | [4375](https://github.com/xieeryihe/lDetector/blob/main/data/cases/Qwen-14B-Chat-Int4.xlsx) | [64](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-Qwen-14B-Chat-Int4.xlsx) | 48             | 54                     | 40                       | 10             |
-| [gpt-3.5-turbo](https://platform.openai.com/docs/models/gpt-3-5) | over 100B  | [3724](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-cot.xlsx) | [47](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) | 33             | 46                     | 33                       | 1              |
+| Model                                                        | Model Size | Generated Test Cases                                         | Suspicious missed recalls                                    | Shops Involved | Confirmed missed recalls | Confirmed Shops Involved | False positive |
+| ------------------------------------------------------------ | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ------------------------ | ------------------------ | -------------- |
+| [gpt-neo-2.7B](https://huggingface.co/EleutherAI/gpt-neo-2.7B) | 2.7B       | [2607](https://github.com/xieeryihe/lDetector/blob/main/data/cases/gpt-neo-2.7B.xlsx) | [35](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-gpt-neo-2.7B.xlsx) | 35             | 6                        | 6                        | 29             |
+| [chatglm2-6b](https://huggingface.co/THUDM/chatglm2-6b)      | 6B         | [3803](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatglm2-6b.xlsx) | [54](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatglm2-6b.xlsx) | 44             | 32                       | 26                       | 22             |
+| [Qwen-14B-Chat-Int4](https://huggingface.co/Qwen/Qwen-14B-Chat-Int4) | 14B        | [4375](https://github.com/xieeryihe/lDetector/blob/main/data/cases/Qwen-14B-Chat-Int4.xlsx) | [64](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-Qwen-14B-Chat-Int4.xlsx) | 48             | 54                       | 40                       | 10             |
+| [gpt-3.5-turbo](https://platform.openai.com/docs/models/gpt-3-5) | over 100B  | [3724](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-cot.xlsx) | [47](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) | 33             | 46                       | 33                       | 1              |
 
 To make it easier to understand, let's take the first row an example: 
 
-> lDetector with gpt-neo-2.7B generates 2607 test cases, and reports 35 suspicipus leak-recalls in total, invoving 35 shops. After human confirmation, 6 entries are confirmed as real leak-recalls, involving 6 shops. 
+> lDetector with gpt-neo-2.7B generates 2607 test cases, and reports 35 suspicipus missed recalls in total, invoving 35 shops. After human confirmation, 6 entries are confirmed as real missed recalls, involving 6 shops. 
 
 ​    
 
 
-The **generated test cases** raw data can be found in the hyperlink in `Generated Test Cases` column of the table, as well as the **leak-recalls** shown in the `Suspicious Leak-recalls` column. 
+The **generated test cases** raw data can be found in the hyperlink in `Generated Test Cases` column of the table, as well as the **missed recalls** shown in the `Suspicious missed recalls` column. 
 
 - For model **gpt-3.5-turbo**, we compared the results of different prompts:
 
-| Prompt                | Generated Test Cases                                         | Suspicious Leak-recalls                                      | Shops Involved | Confirmed Leak-recalls | Confirmed Shops Involved | False positive |
-| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---------------------- | ------------------------ | -------------- |
-| Chain of Thought(cot) | [3724](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-cot.xlsx) | [47](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) | 33             | 46                     | 33                       | 1              |
-| few-shot              | [5700](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-few-shot.xlsx) | [156](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-few-shot.xlsx) | 98             | 121                    | 76                       | 35             |
-| zero-shot             | [4622](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-zero-shot.xlsx) | [46](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-zero-shot.xlsx) | 42             | 39                     | 37                       | 7              |
+| Prompt                | Generated Test Cases                                         | Suspicious missed recalls                                    | Shops Involved | Confirmed missed recalls | Confirmed Shops Involved | False positive |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ------------------------ | ------------------------ | -------------- |
+| Chain of Thought(cot) | [3724](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-cot.xlsx) | [47](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) | 33             | 46                       | 33                       | 1              |
+| few-shot              | [5700](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-few-shot.xlsx) | [156](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-few-shot.xlsx) | 98             | 121                      | 76                       | 35             |
+| zero-shot             | [4622](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-zero-shot.xlsx) | [46](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-zero-shot.xlsx) | 42             | 39                       | 37                       | 7              |
 
+​    
 
+**Without LLM validation step**, a total of 3,724 test cases were generated, and [78 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-no_check_gpt3.5results.xlsx) were found, involving 45 stores. After manual inspection, 71 of the data were accurate (involving 42 stores), and another 7 were false positives.
+
+​    
 
 The specific prompt can be viewed in code.
 
@@ -77,7 +81,7 @@ For each file in [final](https://github.com/xieeryihe/lDetector/tree/main/data/f
 | ---- | -------------- | ---------------- | ------------- | ----------- | ----------- | --------- | ------------------------------------------------------------ | ---------------------------------------------- | -------- | --------- | ---- | -------- | ------------ | ------------------- | ----- |
 | 102  | leak           | partial_leak     | yes           | 0.952380952 | equal_query | yes       | ["Let's burger &amp; pasta·非常创意汉堡(蓝色港湾店)",  "Let'sBURGERplus·非常创意汉堡(三里屯店)"] | Let's burger &  pasta·非常创意汉堡(蓝色港湾店) | 39.95    | 116.5     | 北京 | 汉堡     | 非常创意汉堡 | yes                 | 0     |
 
-The data in the first few columns of the table is mainly used for the judgment in the code, and the specific meaning can be understood in oracle.py. The main concern is the **human** column, indicating the result of human judgment, where **1** indicates that it is a **leak-recall** and **0** indicates not.
+The data in the first few columns of the table is mainly used for the judgment in the code, and the specific meaning can be understood in oracle.py. The main concern is the **human** column, indicating the result of human judgment, where **1** indicates that it is a **missed recall** and **0** indicates not.
 
 For privacy concerns and security of cooperational tools, we omit **the_search_url** and **the_city_id** column in the table.
 
@@ -92,7 +96,7 @@ We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-tur
 | File                                                         | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [generate_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/generate_local.py) | Use the raw data in `shops.xlsx` to generate the `test_case`. |
-| [check_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/check_local.py) | Use the `test_case` generated by `generate_local.py` to check if the test_case can be a leak-recall. |
+| [check_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/check_local.py) | Use the `test_case` generated by `generate_local.py` to check if the test_case can be a missed recall. |
 | [*_server.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/glm_server.py) | Deploy the model locally so that we can access the local model as we would the remote model. |
 
 ​    
