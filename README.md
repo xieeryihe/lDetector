@@ -125,7 +125,10 @@ We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-tur
 
 ### 2.3 File: ./code/oracle.py
 
-The test [oracle code](https://github.com/xieeryihe/lDetector/blob/main/code/oracle.py).  It is used to determine whether a missed recall occurs.
+The [test oracle code](https://github.com/xieeryihe/lDetector/blob/main/code/oracle.py).  It is used to determine whether a missed recall occurs.
+
+All search results are obtained from the search API of M Inc. 
+We omit the code snippet of geting search results given the search keywords (test cases) for security concerns of the industrial search API.
 
 ​    
 
