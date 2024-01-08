@@ -1,9 +1,13 @@
 # lDetector
 lDetector is a novel testing approach targeting missed recalls of search components in e-commerce apps.
+
 To detect missed recalls, lDetector generates multiple queries toward the same target shop by LLM and compares the search results. Any inconsistency in the search results hints at a potential missed recall.  For example, five queries can be generated for the same restaurant. If four queries can recall this restaurant but one can not, lDetector reports a missed recall.
+
 The designing of lDetector involves three major considerations: 1) the choice of the LLM used; 2)the prompt used for query generation; 3)the LLM validation step. 
 To illustrate the effectiveness of lDetector, three experiments are designed targeting each of the three major considerations. Apart from that, an experiment using real online industrial data is conducted to explore lDetector's handiness in a real industrial setting.
-Here we report both codes used and raw experimental results. For data security concerns, we omit raw results of the real-industrial-data experiment
+
+Here we report 0）experimental environment； 1）experimental codes; 2) raw experimental results. For data security concerns, we omit both data and the raw results of the real-industrial-data experiment. Reported data and code have been desensitized according to the data security requirements of M Inc.
+
    
 
 ## 1.Data
