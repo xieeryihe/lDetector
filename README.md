@@ -6,9 +6,10 @@ To detect missed recalls, lDetector generates multiple queries toward the same t
 The designing of lDetector involves three major considerations: 1) the choice of the LLM used; 2)the prompt used for query generation; 3)the LLM validation step. 
 To illustrate the effectiveness of lDetector, three experiments are designed targeting each of the three major considerations. Apart from that, an experiment using real online industrial data is conducted to explore lDetector's handiness in a real industrial setting.
 
-Here we report 0）experimental environment； 1）experimental codes; 2) raw experimental results. For data security concerns, we omit both data and the raw results of the real-industrial-data experiment. Reported data and code have been desensitized according to the data security requirements of M Inc.
+Here we report 1）experimental codes; 2) raw experimental results. For data security concerns, we omit both data and the raw results of the real-industrial-data experiment. Reported data and code have been desensitized according to the data security requirements of M Inc.
 
-   
+The experimental codes are implemented with Python and require the following packages: pandas, re, itertools, jieba, concurrent, open ai, requests, tenacity, requests, json, jsonpath, ast. We recommend Python 3.8 and higher versions.
+
 
 ## 1.Data
 
@@ -16,7 +17,7 @@ Here we report 0）experimental environment； 1）experimental codes; 2) raw ex
 
 ### 1.1 Result overview
 
-- Comparing models of **different sizes**, the test results are as follows:
+- Comparing models of **different parameter sizes**, the test results are as follows:
 
 | Model                                                        | Model Size | Generated Test Cases                                         | Suspicious missed recalls                                    | Shops Involved | Confirmed missed recalls | Confirmed Shops Involved | False positive |
 | ------------------------------------------------------------ | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ------------------------ | ------------------------ | -------------- |
@@ -25,9 +26,9 @@ Here we report 0）experimental environment； 1）experimental codes; 2) raw ex
 | [Qwen-14B-Chat-Int4](https://huggingface.co/Qwen/Qwen-14B-Chat-Int4) | 14B        | [4375](https://github.com/xieeryihe/lDetector/blob/main/data/cases/Qwen-14B-Chat-Int4.xlsx) | [64](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-Qwen-14B-Chat-Int4.xlsx) | 48             | 54                       | 40                       | 10             |
 | [gpt-3.5-turbo](https://platform.openai.com/docs/models/gpt-3-5) | over 100B  | [3724](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-cot.xlsx) | [47](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) | 33             | 46                       | 33                       | 1              |
 
-To make it easier to understand, let's take the first row an example: 
+To make it easier to understand, let's take the first row as an example: 
 
-> lDetector with gpt-neo-2.7B generates 2607 test cases, and reports 35 suspicipus missed recalls in total, invoving 35 shops. After human confirmation, 6 entries are confirmed as real missed recalls, involving 6 shops. 
+> lDetector with gpt-neo-2.7B generates 2607 test cases, and reports 35 suspicious missed recalls in total, involving 35 shops. After human confirmation, 6 entries are confirmed as real missed recalls, involving 6 shops. 
 
 ​    
 
@@ -43,18 +44,20 @@ The **generated test cases** raw data can be found in the hyperlink in `Generate
 | zero-shot             | [4622](https://github.com/xieeryihe/lDetector/blob/main/data/cases/chatgpt3.5-zero-shot.xlsx) | [46](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-zero-shot.xlsx) | 42             | 39                       | 37                       | 7              |
 
 ​    
-
+- For model **gpt-3.5-turbo**, and use **Chain of Thought prompt**, we compared the results with/ without a LLM validation step:
+  
 **Without LLM validation step**, a total of 3,724 test cases were generated, and [78 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-no_check_gpt3.5results.xlsx) were found, involving 45 stores. After manual inspection, 71 of the data were accurate (involving 42 stores), and another 7 were false positives.
 
-​    
+**With LLM validation step**, a total of 3,724 test cases were generated, and [47 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) were found, involving 33 stores. After manual inspection, 46 of the data were accurate (involving 33 stores), and another 1 were false positives.
+  
 
-> For privacy concerns and security of cooperational tools, we remove **the_search_url** and **the_city_id** columns and anonymized **poi_name**, **latitude**, **longitude** and **test_case** columns, while masked data in the following table is only used to show the data format.
+> For privacy concerns and security of cooperation tools, we remove **the_search_url** and **the_city_id** columns and anonymized **poi_name**, **latitude**, **longitude** and **test_case** columns, while masked data in the following table is only used to show the data format.
 
 ​    
 
 ### 1.2 File：./data/shop.xlsx
 
-The [shop.xlsx](https://github.com/xieeryihe/lDetector/blob/main/data/shops.xlsx) displays 652 pieces of raw data that we manually obtained from Meituan APP. The sample data format is shown in the table below.
+The [shop.xlsx](https://github.com/xieeryihe/lDetector/blob/main/data/shops.xlsx) displays shops that we used as the input data (target shops). Those shops are openly accessible via the Baidu Map API. The sample data format is shown in the table below.
 
 | poi_name                 | latitude  | longitude | city | poi_type |
 | ------------------------ | --------- | --------- | ---- | -------- |
@@ -68,7 +71,7 @@ The `poi_name` indicates the full name of the store, and `poi_type` indicates th
 
 ### 1.3 Folder：./data/cases
 
-For each file in the [cases](https://github.com/xieeryihe/lDetector/tree/main/data/cases) directory, such as `chatglm2-6b.xlsx`, we first use `chatglm2-6b` model to generate related search keywords(`test_case`) based on the raw data in `shops.xlsx`. Then we use the **same** `chatglm2-6b` model to self-check whether these keywords can retrieve the corresponding store. The sample data format of `chatglm2-6b.xlsx` is shown in the table below.
+For each file in the [cases](https://github.com/xieeryihe/lDetector/tree/main/data/cases) directory, such as `chatglm2-6b.xlsx`, we first use `chatglm2-6b` model to generate search keywords(`test_case`) based on the raw data in `shops.xlsx`. Then we use the **same** `chatglm2-6b` model to self-check whether these keywords are reasonable (in line with human-constructed keywords). The sample data format of `chatglm2-6b.xlsx` is shown in the table below.
 
 | poi_name           | latitude  | longitude | city | poi_type | test_case          | test_case_judgement |
 | ------------------ | --------- | --------- | ---- | -------- | ------------------ | ------------------- |
@@ -77,27 +80,27 @@ For each file in the [cases](https://github.com/xieeryihe/lDetector/tree/main/da
 | `***餐厅(*里河店)` | Anonymous | Anonymous | 北京 | 鲁菜     | `*里河店`          | yes                 |
 | ..                 | ...       | ...       | ...  | ...      | ...                | ...                 |
 
-The `test_case` column represents the keywords generated by the model, and the `test_case_judgement` column represents the self-checking results. Item `yes` indicates that the model believes the store can be searched through this keyword and `no` indicates the opposite.
+The `test_case` column represents the keywords generated by the model, and the `test_case_judgement` column represents the self-checking results. Item `yes` indicates that the model believes a certain keyword is **reasonable** to be used to retrieve the target shop. And `no` indicates the opposite.
 
 ​    
 
 ### 1.4 Folder：./data/final
 
-For each file in [final](https://github.com/xieeryihe/lDetector/tree/main/data/final) directory, such as `final-chatGLm2-6b.xlsx`, the sample data format of is shown in the table below.
+For each file in [final](https://github.com/xieeryihe/lDetector/tree/main/data/final) directory, such as `final-chatGLm2-6b.xlsx`, the sample data format is shown in the table below.
 
 |      | leak_judgement | equal_leak_exist | accurate_leak | equal_ratio | query_type  | self_leak | searched_shops                                       | poi_name                      | latitude  | longitude | city | poi_type | test_case    | test_case_judgement | human |
 | ---- | -------------- | ---------------- | ------------- | ----------- | ----------- | --------- | ---------------------------------------------------- | ----------------------------- | --------- | --------- | ---- | -------- | ------------ | ------------------- | ----- |
 | 102  | leak           | partial_leak     | yes           | 0.952380952 | equal_query | yes       | `["***创意汉堡(**港湾店)",  "****创意汉堡(**屯店)"]` | `["***创意汉堡(**港湾店)",  ` | Anonymous | Anonymous | 北京 | 汉堡     | `**创意汉堡` | yes                 | 0     |
 
-The data in the first few columns of the table is mainly used for the judgment in the code, and the specific meaning can be understood in oracle.py. The main concern is the **human** column, indicating the result of human judgment, where **1** indicates that it is a **missed recall** and **0** indicates not.
+The first 6 columns of the table are mainly used to determine whether a missed recall occurs, and the specific meaning can be understood in oracle.py. The main concern is the **human** column, indicating the result of human judgment, where **1** indicates that it is a **missed recall** and **0** indicates a false positive.
 
 ​    
 
 ## 2.code
 
-We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-turbo), so we have two versions of code in directories `code/local` and `code/gpt` respectively.
+We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-turbo), so we have two versions of code in directories `code/local` and `code/gpt`, respectively.
 
-> For the same reasons of privacy and other reasons, we mask part of the prompt, while it doesn't affect understanding.
+> For data security and privacy concerns, we mask shop names in the prompt while it doesn't affect understanding.
 
 ​    
 
@@ -105,9 +108,9 @@ We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-tur
 
 | File                                                         | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [generate_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/generate_local.py) | Use the raw data in `shops.xlsx` to generate the `test_case`. |
-| [check_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/check_local.py) | Use the `test_case` generated by `generate_local.py` to check if the test_case can be a missed recall. |
-| [*_server.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/glm_server.py) | Deploy the model locally so that we can access the local model as we would the remote model. |
+| [generate_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/generate_local.py) | Use the shops in `shops.xlsx` as target shops to generate the `test_case`. |
+| [check_local.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/check_local.py) | Check whether the generated test cases are resonable. |
+| [*_server.py](https://github.com/xieeryihe/lDetector/blob/main/code/local/glm_server.py) | Deploy the model locally so  we can access the local model in the same way as access the remote model. |
 
 ​    
 
@@ -115,14 +118,14 @@ We test lDetector on both local(gpt-neo-2.7B, etc) and remote models(gpt-3.5-tur
 
 | File                                                         | Description                        |
 | ------------------------------------------------------------ | ---------------------------------- |
-| [generate_gpt.py](https://github.com/xieeryihe/lDetector/blob/main/code/gpt/generate_gpt.py) | Use chatgpt-3.5-turbo to generate. |
-| [check_gpt.py](https://github.com/xieeryihe/lDetector/blob/main/code/gpt/check_gpt.py) | Use chatgpt-3.5-turbo to check.    |
+| [generate_gpt.py](https://github.com/xieeryihe/lDetector/blob/main/code/gpt/generate_gpt.py) | Use chatgpt-3.5-turbo to generate test cases. |
+| [check_gpt.py](https://github.com/xieeryihe/lDetector/blob/main/code/gpt/check_gpt.py) | Use chatgpt-3.5-turbo to check whether the test cases are resonable.    |
 
 ​    
 
 ### 2.3 File: ./code/oracle.py
 
-The test [oracle code](https://github.com/xieeryihe/lDetector/blob/main/code/oracle.py).  
+The test [oracle code](https://github.com/xieeryihe/lDetector/blob/main/code/oracle.py).  It is used to determine whether a missed recall occurs.
 
 ​    
 
