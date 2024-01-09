@@ -35,7 +35,7 @@ To make it easier to understand, let's take the first row as an example:
 
 The **generated test cases** raw data can be found in the hyperlink in `Generated Test Cases` column of the table, as well as the **missed recalls** shown in the `Suspicious missed recalls` column. 
 
-- For model **gpt-3.5-turbo**, we compared the results of different prompts:
+- For model **gpt-3.5-turbo**, we compare the results of different prompts:
 
 | Prompt                | Generated Test Cases                                         | Suspicious missed recalls                                    | Shops Involved | Confirmed missed recalls | Confirmed Shops Involved | False positive |
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ------------------------ | ------------------------ | -------------- |
@@ -46,18 +46,18 @@ The **generated test cases** raw data can be found in the hyperlink in `Generate
 ​    
 - For model **gpt-3.5-turbo**, and use **Chain of Thought prompt**, we compared the results with/ without a LLM validation step:
   
-**Without LLM validation step**, a total of 3,724 test cases were generated, and [78 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-no_check_gpt3.5results.xlsx) were found, involving 45 stores. After manual inspection, 71 of the data were accurate (involving 42 stores), and another 7 were false positives.
+**Without LLM validation step**, a total of 3,724 test cases were generated, and [78 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-no_check_gpt3.5results.xlsx) were found, involving 45 stores. After manual inspection, 71 of the them were accurate (involving 42 stores), and another 7 were false positives.
 
-**With LLM validation step**, a total of 3,724 test cases were generated, and [47 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) were found, involving 33 stores. After manual inspection, 46 of the data were accurate (involving 33 stores), and another 1 were false positives.
+**With LLM validation step**, a total of 3,724 test cases were generated, and [47 missed recalls](https://github.com/xieeryihe/lDetector/blob/main/data/final/final-chatgpt3.5-cot.xlsx) were found, involving 33 stores. After manual inspection, 46 of them were accurate (involving 33 stores), and another 1 were false positives.
   
 
-> For privacy concerns and security of cooperation tools, we remove **the_search_url** and **the_city_id** columns and anonymized **poi_name**, **latitude**, **longitude** and **test_case** columns, while masked data in the following table is only used to show the data format.
+> For privacy concerns and security of cooperation tools, we removed **the_search_url** and **the_city_id** columns and anonymized **poi_name**, **latitude**, **longitude** and **test_case** columns, while masked data in the following table is only used to show the data format.
 
 ​    
 
 ### 1.2 File：./data/shop.xlsx
 
-The [shop.xlsx](https://github.com/xieeryihe/lDetector/blob/main/data/shops.xlsx) displays shops that we used as the input data (target shops). Those shops are openly accessible via the Baidu Map API. The sample data format is shown in the table below.
+The [shop.xlsx](https://github.com/xieeryihe/lDetector/blob/main/data/shops.xlsx) displays shops that we used as the input data (target shops). Those shops were openly accessible via the Baidu Map API. The sample data format is shown in the table below.
 
 | poi_name                 | latitude  | longitude | city | poi_type |
 | ------------------------ | --------- | --------- | ---- | -------- |
