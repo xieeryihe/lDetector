@@ -97,7 +97,7 @@ The first 6 columns of the table are mainly used to determine whether a missed r
 
 ### 1.2 Performances in the Product Searching Scenario
 #### 1.1.1 Overview​ 
-Raw data illustrating performance across different platforms and product types are shown in https://github.com/xieeryihe/lDetector/edit/main/README.md
+Raw data illustrating performance across different platforms and product types are shown in https://github.com/xieeryihe/lDetector/blob/main/data/validation_results.xlsx
 The Human column indicates manual validation results concerning the reasonableness of the generated queries. O indicates a resonable query, and 1 otherwise.
 #### 1.1.2 File:  ./data/products.xlsx
 This file serves as the input (target products) in the evaluation of mrDetector in product searching. This dataset is maually constructed from the open data of multiple Chinese e-commerce platforms and product types.
